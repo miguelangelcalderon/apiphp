@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Consumidor cliente angular de una API REST</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script 
+            src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js">
+        </script>   
+    </head>
+    <body>
+        <div ng-app="aplicacion" ng-controller="controlador">
+        <h3>Listado de todas las promociones</h3>
+
+        <table>
+            <tr><th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Foto</th>
+            </tr>
+            <tr ng-repeat="promocion in promociones">
+                <td>{{promocion.nombre}}</td>
+                <td>{{promocion.descripcion.slice(0,40)}}...</td>
+                <td><img src="img/{{promocion.foto}}" width="100" height="100"></td>
+            </tr>
+        </table>
+        
+        <h3>Datos de una promocion en concreto</h3>
+        
+        </div>
+        
+        <script>
+            var app=angular.module("aplicacion",[]);
+            app.controller('controlador',function($scope,$http) {
+                $http.get("http://localhost/api-php/promocion").then(function(respuesta) { $scope.promociones=respuesta.data;});
+                
+                
+            });
+        </script>    
+    </body>
+</html>

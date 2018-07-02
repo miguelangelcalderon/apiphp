@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Ejemplo basico de Angular,ejemplo AJAX contra PHP</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script 
+            src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js">
+        </script>   
+    </head>
+    <body>
+        <div ng-app="aplicacion" ng-controller="controlador">
+        <h3>Listado de promociones..</h3>
+        
+        <table border="1" width="80%">
+            <tr>
+                <th>Nombre Promocion</th>
+                <th>Foto Promocion</th>
+                <th>Nombre Provincia</th>
+            </tr>
+            <tr ng-repeat="x in datos">
+                <td>{{x.nombre}}</td>
+                <td>{{x.foto}}</td>
+                <td>{{x.cod_provincia}}</td>
+            </tr>
+        </table>
+        
+        </div>
+        
+        <script>
+            var app=angular.module("aplicacion",[]);
+            app.controller('controlador',function($scope,$http) {
+               // $http.get("listado-promociones-json.php").then(function(respuesta) { $scope.datos=respuesta.data.records});
+             $http.get("http://localhost/api-php/promocion").then(function(respuesta) { $scope.datos=respuesta.data;
+             alert(respuesta.data[0].nombre);
+    
+                });   
+            });
+        </script>    
+    </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Consumidor cliente angular de una API REST</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script 
+            src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js">
+        </script>   
+    </head>
+    <body>
+        <div ng-app="aplicacion" ng-controller="controlador">
+        Codigo de la promocion que quieres visualizar:
+        <input ng-model="codigo">
+        <button ng-click="actualiza()">Mostar datos</button>
+        <br>
+        Codigo de la promocion seleccionado {{codigo}}
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <td>{{nombre}}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{descripcion}}</td>
+            </tr>    
+            <tr>
+                <th>Foto</th>
+                <td><img src="img/{{foto}}"></td>
+            </tr>    
+        </table>
+        
+       
+        
+        <script>
+            var app=angular.module("aplicacion",[]);
+            app.controller('controlador',function($scope,$http) {
+            
+            $scope.actualiza=function() {
+                $http.get("http://localhost/api-php/promocion/"+$scope.codigo)
+                        .then(function(respuesta) { 
+                                                    if (respuesta.data.status==null)
+                                                    {
+                                                    $scope.nombre=respuesta.data[0].nombre;
+                                                    $scope.descripcion=respuesta.data[0].descripcion;
+                                                    $scope.foto=respuesta.data[0].foto;
+                                                    } else 
+                                                    {
+                                                     $scope.codigo=respuesta.data.message;   
+                                                    }
+                                                  }
+                );
+            }    
+                
+            });
+        </script>    
+    </body>
+</html>

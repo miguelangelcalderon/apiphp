@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Ejemplo de llamda desde Angular a API REST NODE</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js">
+            </script>
+    </head>
+    <body>
+        <h2>Ejemplo de llamda desde Angular a API REST NODE.js</h2>
+        
+            <div ng-app="myApp" ng-controller="promocionesCtrl"> 
+                <button ng-click="cargadatos()">Cargar datos promociones</button>
+                <table border="2" ng-show="mostrar==true">
+                    <tr>
+                        <th>Id</th>
+                        <th ng-click="ordena('nombre')" style="color:red">Nombre</th>
+                        <th>Foto</th>
+                        <th>Direccion</th>
+                        <th>Provincia</th>
+                        <th>Acciones</th>
+                        
+                    </tr>
+                      <tr ng-repeat="x in promociones">
+                        <td>{{ x.cod_promocion }}</td>
+                        <td>{{ x.nombre }}</td>
+                        <td><img src="img/{{x.foto}}" width="50" height="50"></td>
+                        <td>{{x.Direccion}}</td>
+                        <td>{{x.cod_provincia}}</td>
+                        <td><input type="button" value="ver" ng-click="ver(x.cod_promocion)">
+                            <input type="button" value="eliminar" ng-click="eliminar(x.cod_promocion)">
+                        </td>
+                      </tr>
+                    </table>
+                
+                    <span>{{error}}</span>
+                    <br><br>
+                    <table border="2" >
+                        <tr><th>Nombre:</th><td>{{nombre}}</td> </tr>
+                        <tr><th>Decripcion:</th><td>{{descripcion}}</td> </tr>
+                    </table>
+                    </div>
+    <script>
+            var app=angular.module('myApp',[]);
+            app.controller('promocionesCtrl',function($scope,$http){
+                $scope.mostrar=true;
+                $scope.cargadatos=function(){
+                //$http.get("productos-json.php").then(function(respuesta){ $scope.articulos=respuesta.data;})
+                $scope.mostrar=true;
+                $http.get("http://localhost/api-php/promocion")
+                     .then(function(respuesta) { 
+                         // Caundo todo es correcto
+                       
+                         $scope.promociones=respuesta.data;
+                        },function(error,status) {
+                         // caundo hay algun error   
+                         $scope.error="Problemas en el servidor:"+error+" "+status;   
+                            
+                        });
+                };
+                
+                $scope.eliminar=function(cod) {
+                  $http.delete("http://localhost/api-php/promocion/"+cod)
+                     .then(function(respuesta) { 
+                         // Caundo todo es correcto
+                         alert("La promocion con codigo "+cod+" ha sido eliminiada");
+                        },function(error,status) {
+                         // caundo hay algun error   
+                         $scope.error="Problemas en el servidor:"+error+" "+status;   
+                        });
+                  //cargadatos();      
+                };
+                $scope.ver=function(cod) {
+                    $scope.mostrar=false;
+                  $http.get("http://localhost/api-php/promocion/"+cod)
+                     .then(function(respuesta) { 
+                         // Caundo todo es correcto
+                         $scope.nombre=respuesta.data.nombre;
+                         $scope.descripcion=respuesta.data.descripcion;
+                        },function(error,status) {
+                         // caundo hay algun error   
+                         $scope.error="Problemas en el servidor:"+error+" "+status;   
+                        });
+                };
+            });
+                        
+        </script>
+    </body>
+</html>
+
